@@ -1,0 +1,8 @@
+Checks: "
+  *,
+  -altera-*,
+  -llvmlibc-*,
+  -android-*,
+  -misc-no-recursion,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
+"

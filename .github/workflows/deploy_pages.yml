@@ -7,8 +7,7 @@ on:
     paths:
       - '**.h'
       - '**.c'
-      - 'doc/Doxyfile'
-  workflow_dispatch:
+      - 'doc/**'
 
 jobs:
   build:

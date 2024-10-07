@@ -22,19 +22,25 @@
  * * expression = term, { ("+" | "-"), term }
  */
 struct expression {
+	/**
+	 * @brief The type of an expression.
+	 */
 	enum expression_type {
 		expression_type_constant,
 		expression_type_variable,
 		expression_type_operation,
-	} type;
+	} type; ///< Type of the expression.
 	union {
 		struct constant {
-			double value;
+			double value; ///< Value of the constant.
 		} constant;
 		struct variable {
-			char name;
+			char name; ///< Name of the variable, must be an alphabet letter.
 		} variable;
 		struct operation {
+			/**
+			 * @brief The type of an operation.
+			 */
 			enum operation_type {
 				operation_type_addition,
 				operation_type_subtraction,
@@ -47,8 +53,8 @@ struct expression {
 				operation_type_tangent,
 				operation_type_exponential,
 				operation_type_logarithm,
-			} type;
-			struct expression *operands;
+			} type;						 ///< Type of the operation.
+			struct expression *operands; ///< Array of the operation's operands.
 		} operation;
 	};
 };

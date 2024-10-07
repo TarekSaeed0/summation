@@ -20,7 +20,6 @@ jobs:
         uses: mattnotmitt/doxygen-action@v1.9.8
         with:
           working-directory: doc/
-          doxyfile-path: Doxyfile
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

@@ -9,7 +9,7 @@
  * This data structure represents the environment in which an expression is evaluated.
  */
 struct environment {
-	double variables[VARIABLES_COUNT];
+	double variables[VARIABLES_COUNT]; ///< The values of the variables
 };
 
 /**

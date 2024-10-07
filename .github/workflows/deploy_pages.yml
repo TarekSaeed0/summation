@@ -7,7 +7,7 @@ on:
     paths:
       - '**.h'
       - '**.c'
-      - 'Doxyfile'
+      - 'doc/Doxyfile'
 
 jobs:
   build:
@@ -19,11 +19,11 @@ jobs:
       - name: Generate Doxygen documentation
         uses: mattnotmitt/doxygen-action@v1.9.8
         with:
-          working-directory: doc/
-          doxyfile-path: doc/Doxyfile
+          working-directory: ./doc/
+          doxyfile-path: ./doc/Doxyfile
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: doc/html/
+          publish_dir: ./doc/html/

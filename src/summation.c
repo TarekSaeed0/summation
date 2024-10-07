@@ -12,14 +12,16 @@ double summation(size_t lower_bound, size_t upper_bound, const char *summand) {
 	struct expression expression = expression_from_string(summand);
 	struct environment environment = environment_new();
 
+	expression_simplify(&expression, &environment);
+
 	double sum = 0;
 	for (size_t index = lower_bound; index <= upper_bound; ++index) {
 		environment_set_variable(&environment, 'i', (double)index);
 
-		sum += expression_evaluate(expression, &environment);
+		sum += expression_evaluate(&expression, &environment);
 	}
 
-	expression_drop(expression);
+	expression_drop(&expression);
 
 	return sum;
 }

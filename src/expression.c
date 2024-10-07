@@ -1,4 +1,3 @@
-#include "environment.h"
 #include <expression.h>
 
 #include <errno.h>
@@ -28,34 +27,38 @@ struct expression expression_operation(enum operation_type type, ...) {
 	};
 }
 
-struct expression expression_clone(struct expression expression) {
-	switch (expression.type) {
+struct expression expression_clone(const struct expression *expression) {
+	assert(expression != NULL);
+
+	switch (expression->type) {
 		case expression_type_constant:
-		case expression_type_variable: return expression;
+		case expression_type_variable: return *expression;
 		case expression_type_operation: {
-			size_t arity = operation_type_arity(expression.operation.type);
+			size_t arity = operation_type_arity(expression->operation.type);
 			struct expression *operands = malloc(arity * sizeof(*operands));
 			for (size_t i = 0; i < arity; i++) {
-				operands[i] = expression_clone(expression.operation.operands[i]);
+				operands[i] = expression_clone(&expression->operation.operands[i]);
 			}
 			return (struct expression){
 				.type = expression_type_operation,
-				.operation = { .type = expression.operation.type, .operands = operands },
+				.operation = { .type = expression->operation.type, .operands = operands },
 			};
 		} break;
 	}
 }
 
-void expression_drop(struct expression expression) {
-	switch (expression.type) {
+void expression_drop(struct expression *expression) {
+	assert(expression != NULL);
+
+	switch (expression->type) {
 		case expression_type_constant:
 		case expression_type_variable: break;
 		case expression_type_operation: {
-			size_t arity = operation_type_arity(expression.operation.type);
+			size_t arity = operation_type_arity(expression->operation.type);
 			for (size_t i = 0; i < arity; i++) {
-				expression_drop(expression.operation.operands[i]);
+				expression_drop(&expression->operation.operands[i]);
 			}
-			free(expression.operation.operands);
+			free(expression->operation.operands);
 		} break;
 	}
 }
@@ -267,8 +270,10 @@ struct expression expression_from_string(const char *string) {
 static int expression_to_string_(
 	char *string,
 	size_t maximum_length,
-	struct expression expression
+	const struct expression *expression
 ) {
+	assert(expression != NULL);
+
 	int total_length = 0;
 #define print(function, ...)                                                                       \
 	do {                                                                                           \
@@ -286,26 +291,26 @@ static int expression_to_string_(
 		total_length += length;                                                                    \
 	} while (0)
 
-	switch (expression.type) {
-		case expression_type_constant: print(snprintf, "%lg", expression.constant.value); break;
-		case expression_type_variable: print(snprintf, "%c", expression.variable.name); break;
+	switch (expression->type) {
+		case expression_type_constant: print(snprintf, "%lg", expression->constant.value); break;
+		case expression_type_variable: print(snprintf, "%c", expression->variable.name); break;
 		case expression_type_operation: {
-			switch (expression.operation.type) {
+			switch (expression->operation.type) {
 				case operation_type_addition:
 				case operation_type_subtraction:
 				case operation_type_multiplication:
 				case operation_type_division: {
-					if (expression.operation.operands[0].type == expression_type_operation &&
-						(operation_type_precedence(expression.operation.operands[0].operation.type
-						 ) < operation_type_precedence(expression.operation.type))) {
+					if (expression->operation.operands[0].type == expression_type_operation &&
+						(operation_type_precedence(expression->operation.operands[0].operation.type
+						 ) < operation_type_precedence(expression->operation.type))) {
 						print(snprintf, "(");
-						print(expression_to_string_, expression.operation.operands[0]);
+						print(expression_to_string_, &expression->operation.operands[0]);
 						print(snprintf, ")");
 					} else {
-						print(expression_to_string_, expression.operation.operands[0]);
+						print(expression_to_string_, &expression->operation.operands[0]);
 					}
 
-					switch (expression.operation.type) {
+					switch (expression->operation.type) {
 						case operation_type_addition: print(snprintf, " + "); break;
 						case operation_type_subtraction: print(snprintf, " - "); break;
 						case operation_type_multiplication: print(snprintf, " * "); break;
@@ -314,50 +319,50 @@ static int expression_to_string_(
 						default: __builtin_unreachable();
 					}
 
-					if (expression.operation.operands[1].type == expression_type_operation &&
-						(operation_type_precedence(expression.operation.operands[1].operation.type
-						 ) <= operation_type_precedence(expression.operation.type))) {
+					if (expression->operation.operands[1].type == expression_type_operation &&
+						(operation_type_precedence(expression->operation.operands[1].operation.type
+						 ) <= operation_type_precedence(expression->operation.type))) {
 						print(snprintf, "(");
-						print(expression_to_string_, expression.operation.operands[1]);
+						print(expression_to_string_, &expression->operation.operands[1]);
 						print(snprintf, ")");
 					} else {
-						print(expression_to_string_, expression.operation.operands[1]);
+						print(expression_to_string_, &expression->operation.operands[1]);
 					}
 				} break;
 				case operation_type_exponentiation: {
-					if (expression.operation.operands[0].type == expression_type_operation &&
-						(operation_type_precedence(expression.operation.operands[0].operation.type
-						 ) <= operation_type_precedence(expression.operation.type))) {
+					if (expression->operation.operands[0].type == expression_type_operation &&
+						(operation_type_precedence(expression->operation.operands[0].operation.type
+						 ) <= operation_type_precedence(expression->operation.type))) {
 						print(snprintf, "(");
-						print(expression_to_string_, expression.operation.operands[0]);
+						print(expression_to_string_, &expression->operation.operands[0]);
 						print(snprintf, ")");
 					} else {
-						print(expression_to_string_, expression.operation.operands[0]);
+						print(expression_to_string_, &expression->operation.operands[0]);
 					}
 
 					print(snprintf, " ^ ");
 
-					if (expression.operation.operands[1].type == expression_type_operation &&
-						(operation_type_precedence(expression.operation.operands[1].operation.type
-						 ) < operation_type_precedence(expression.operation.type))) {
+					if (expression->operation.operands[1].type == expression_type_operation &&
+						(operation_type_precedence(expression->operation.operands[1].operation.type
+						 ) < operation_type_precedence(expression->operation.type))) {
 						print(snprintf, "(");
-						print(expression_to_string_, expression.operation.operands[1]);
+						print(expression_to_string_, &expression->operation.operands[1]);
 						print(snprintf, ")");
 					} else {
-						print(expression_to_string_, expression.operation.operands[1]);
+						print(expression_to_string_, &expression->operation.operands[1]);
 					}
 				} break;
 				case operation_type_negation: {
 					print(snprintf, "-");
 
-					if (expression.operation.operands[0].type == expression_type_operation &&
-						(operation_type_precedence(expression.operation.operands[0].operation.type
-						 ) < operation_type_precedence(expression.operation.type))) {
+					if (expression->operation.operands[0].type == expression_type_operation &&
+						(operation_type_precedence(expression->operation.operands[0].operation.type
+						 ) < operation_type_precedence(expression->operation.type))) {
 						print(snprintf, "(");
-						print(expression_to_string_, expression.operation.operands[0]);
+						print(expression_to_string_, &expression->operation.operands[0]);
 						print(snprintf, ")");
 					} else {
-						print(expression_to_string_, expression.operation.operands[0]);
+						print(expression_to_string_, &expression->operation.operands[0]);
 					}
 				} break;
 				case operation_type_sine:
@@ -365,7 +370,7 @@ static int expression_to_string_(
 				case operation_type_tangent:
 				case operation_type_exponential:
 				case operation_type_logarithm: {
-					switch (expression.operation.type) {
+					switch (expression->operation.type) {
 
 						case operation_type_sine: print(snprintf, "sin"); break;
 						case operation_type_cosine: print(snprintf, "cos"); break;
@@ -376,7 +381,7 @@ static int expression_to_string_(
 						default: __builtin_unreachable();
 					}
 					print(snprintf, "(");
-					print(expression_to_string_, expression.operation.operands[0]);
+					print(expression_to_string_, &expression->operation.operands[0]);
 					print(snprintf, ")");
 				} break;
 			}
@@ -387,7 +392,9 @@ static int expression_to_string_(
 #undef print
 }
 
-char *expression_to_string(struct expression expression) {
+char *expression_to_string(const struct expression *expression) {
+	assert(expression != NULL);
+
 	int length = expression_to_string_(NULL, 0, expression);
 	if (length < 0) {
 		return NULL;
@@ -406,13 +413,44 @@ char *expression_to_string(struct expression expression) {
 	return string;
 }
 
-void expression_debug_print(struct expression expression) {
-	switch (expression.type) {
-		case expression_type_constant: printf("constant(%lg)", expression.constant.value); break;
-		case expression_type_variable: printf("variable(%c)", expression.variable.name); break;
+void expression_simplify(struct expression *expression, const struct environment *environment) {
+	assert(expression != NULL);
+
+	switch (expression->type) {
+		case expression_type_constant: break;
+		case expression_type_variable: {
+			if (environment != NULL) {
+				double value = environment_get_variable(environment, expression->variable.name);
+				if (!isnan(value)) {
+					*expression = expression_constant(value);
+				}
+			}
+		} break;
+		case expression_type_operation: {
+			bool is_constant = true;
+
+			size_t arity = operation_type_arity(expression->operation.type);
+			for (size_t i = 0; i < arity; i++) {
+				expression_simplify(&expression->operation.operands[i], environment);
+				if (expression->operation.operands[i].type != expression_type_constant) {
+					is_constant = false;
+				}
+			}
+
+			if (is_constant) {
+				*expression = expression_constant(expression_evaluate(expression, environment));
+			}
+		}
+	}
+}
+
+void expression_debug_print(const struct expression *expression) {
+	switch (expression->type) {
+		case expression_type_constant: printf("constant(%lg)", expression->constant.value); break;
+		case expression_type_variable: printf("variable(%c)", expression->variable.name); break;
 		case expression_type_operation: {
 			printf("operation(");
-			switch (expression.operation.type) {
+			switch (expression->operation.type) {
 				case operation_type_addition: printf("addition("); break;
 				case operation_type_subtraction: printf("subtraction("); break;
 				case operation_type_multiplication: printf("multiplication("); break;
@@ -425,57 +463,67 @@ void expression_debug_print(struct expression expression) {
 				case operation_type_exponential: printf("exponential("); break;
 				case operation_type_logarithm: printf("logarithm("); break;
 			}
-			size_t arity = operation_type_arity(expression.operation.type);
+			size_t arity = operation_type_arity(expression->operation.type);
 			for (size_t i = 0; i < arity; i++) {
 				if (i != 0) {
 					printf(", ");
 				}
-				expression_debug_print(expression.operation.operands[i]);
+				expression_debug_print(&expression->operation.operands[i]);
 			}
 			printf("))");
 		} break;
 	}
 }
 
-double expression_evaluate(struct expression expression, const struct environment *environment) {
-	switch (expression.type) {
-		case expression_type_constant: return expression.constant.value;
+double expression_evaluate(
+	const struct expression *expression,
+	const struct environment *environment
+) {
+	assert(expression != NULL);
+
+	switch (expression->type) {
+		case expression_type_constant: return expression->constant.value;
 		case expression_type_variable:
 			if (environment == NULL) {
 				return NAN;
 			}
-			return environment_get_variable(environment, expression.variable.name);
+			return environment_get_variable(environment, expression->variable.name);
 		case expression_type_operation: {
-			switch (expression.operation.type) {
+			switch (expression->operation.type) {
 				case operation_type_addition:
-					return expression_evaluate(expression.operation.operands[0], environment) +
-						   expression_evaluate(expression.operation.operands[1], environment);
+					return expression_evaluate(&expression->operation.operands[0], environment) +
+						   expression_evaluate(&expression->operation.operands[1], environment);
 				case operation_type_subtraction:
-					return expression_evaluate(expression.operation.operands[0], environment) -
-						   expression_evaluate(expression.operation.operands[1], environment);
+					return expression_evaluate(&expression->operation.operands[0], environment) -
+						   expression_evaluate(&expression->operation.operands[1], environment);
 				case operation_type_multiplication:
-					return expression_evaluate(expression.operation.operands[0], environment) *
-						   expression_evaluate(expression.operation.operands[1], environment);
+					return expression_evaluate(&expression->operation.operands[0], environment) *
+						   expression_evaluate(&expression->operation.operands[1], environment);
 				case operation_type_division:
-					return expression_evaluate(expression.operation.operands[0], environment) /
-						   expression_evaluate(expression.operation.operands[1], environment);
+					return expression_evaluate(&expression->operation.operands[0], environment) /
+						   expression_evaluate(&expression->operation.operands[1], environment);
 				case operation_type_exponentiation:
 					return pow(
-						expression_evaluate(expression.operation.operands[0], environment),
-						expression_evaluate(expression.operation.operands[1], environment)
+						expression_evaluate(&expression->operation.operands[0], environment),
+						expression_evaluate(&expression->operation.operands[1], environment)
 					);
 				case operation_type_negation:
-					return -expression_evaluate(expression.operation.operands[0], environment);
+					return -expression_evaluate(&expression->operation.operands[0], environment);
 				case operation_type_sine:
-					return sin(expression_evaluate(expression.operation.operands[0], environment));
+					return sin(expression_evaluate(&expression->operation.operands[0], environment)
+					);
 				case operation_type_cosine:
-					return cos(expression_evaluate(expression.operation.operands[0], environment));
+					return cos(expression_evaluate(&expression->operation.operands[0], environment)
+					);
 				case operation_type_tangent:
-					return tan(expression_evaluate(expression.operation.operands[0], environment));
+					return tan(expression_evaluate(&expression->operation.operands[0], environment)
+					);
 				case operation_type_exponential:
-					return exp(expression_evaluate(expression.operation.operands[0], environment));
+					return exp(expression_evaluate(&expression->operation.operands[0], environment)
+					);
 				case operation_type_logarithm:
-					return log(expression_evaluate(expression.operation.operands[0], environment));
+					return log(expression_evaluate(&expression->operation.operands[0], environment)
+					);
 			}
 		}
 	}

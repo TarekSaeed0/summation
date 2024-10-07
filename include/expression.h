@@ -152,18 +152,18 @@ struct expression expression_operation(enum operation_type type, ...);
  *
  * @memberof expression
  */
-struct expression expression_clone(struct expression expression);
+struct expression expression_clone(const struct expression *expression);
 
 /**
  * @brief Drops an expression.
  *
  * Releases all memory and resources owned by the expression
  *
- * @param[in] expression The expression to drop.
+ * @param[in,out] expression The expression to drop.
  *
  * @memberof expression
  */
-void expression_drop(struct expression expression);
+void expression_drop(struct expression *expression);
 
 /**
  * @brief Creates an expression from a string.
@@ -188,7 +188,20 @@ struct expression expression_from_string(const char *string);
  *
  * @memberof expression
  */
-char *expression_to_string(struct expression expression);
+char *expression_to_string(const struct expression *expression);
+
+/**
+ * @brief Simplifies an expression
+ *
+ * Constant folds any constant sub-expressions in the given expression.
+ * and might perform some mathematical simplifications if possible.
+ *
+ * @param[in,out] expression The expression to be simplified
+ * @param[in] environment The environment the expression is simplified in.
+ *
+ * @memberof expression
+ */
+void expression_simplify(struct expression *expression, const struct environment *environment);
 
 /**
  * @brief Prints an expression in debug format.
@@ -199,7 +212,7 @@ char *expression_to_string(struct expression expression);
  *
  * @memberof expression
  */
-void expression_debug_print(struct expression expression);
+void expression_debug_print(const struct expression *expression);
 
 /**
  * @brief Evaluates an expression
@@ -212,6 +225,9 @@ void expression_debug_print(struct expression expression);
  *
  * @memberof expression
  */
-double expression_evaluate(struct expression expression, const struct environment *environment);
+double expression_evaluate(
+	const struct expression *expression,
+	const struct environment *environment
+);
 
 #endif

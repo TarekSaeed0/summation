@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=11" />
   <meta name="generator" content="Doxygen 1.9.8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Summation: Main Page</title>
+  <title>Summation: Summation</title>
   <!--BEGIN PROJECT_ICON-->
   <link rel="icon" href="$projecticon" type="image/x-icon" />
   <!--END PROJECT_ICON-->
@@ -104,10 +104,23 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">Summation Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Summation </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md__2github_2workspace_2README"></a> <a href="https://github.com/TarekSaeed0/summation/pulse"><img src="https://img.shields.io/github/last-commit/TarekSaeed0/summation?style=for-the-badge&amp;labelColor=%231e1e2e&amp;color=%2394e2d5" alt="Last commit" class="inline"/> </a> <a href="https://github.com/TarekSaeed0/summation/blob/main/LICENSE"><img src="https://img.shields.io/github/license/TarekSaeed0/summation?style=for-the-badge&amp;labelColor=%231e1e2e&amp;color=%23cba6f7" alt="License" class="inline"/> </a> <a href="https://github.com/TarekSaeed0/summation/stargazers"><img src="https://img.shields.io/github/stars/TarekSaeed0/summation?style=for-the-badge&amp;labelColor=%231e1e2e&amp;color=%23f9e2af" alt="Repo stars" class="inline"/> </a></p>
+<p><em>An easy-to-use command-line application for evaluating summations.</em></p>
+<p><code>summation</code> is a C program that takes a lower bound <code>n</code> and upper bound <code>m</code> and an expression <code>f(i)</code>, and evaluates the summation of the summand <code>f(i)</code> from <code>n</code> to <code>m</code> inclusive.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Usage</h1>
+<div class="fragment"><div class="line">summation LOWER_BOUND UPPER_BOUND SUMMAND</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
+Examples</h2>
+<div class="fragment"><div class="line">&gt; summation 1 5 &quot;1 + sin(i^2)&quot;</div>
+<div class="line">5.07653</div>
+<div class="line">&gt; summation 0 10 &quot;1 / 2 ^ (x + 1)&quot;</div>
+<div class="line">5.5</div>
+</div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

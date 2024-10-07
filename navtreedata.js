@@ -25,10 +25,8 @@
 var NAVTREE =
 [
   [ "Summation", "index.html", [
-    [ "Summation", "md__2github_2workspace_2README.html", [
-      [ "Usage", "md__2github_2workspace_2README.html#autotoc_md2", [
-        [ "Examples", "md__2github_2workspace_2README.html#autotoc_md3", null ]
-      ] ]
+    [ "Usage", "index.html#autotoc_md2", [
+      [ "Examples", "index.html#autotoc_md3", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],

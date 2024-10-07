@@ -1,3 +1,4 @@
+#include "environment.h"
 #include <expression.h>
 
 #include <errno.h>
@@ -436,14 +437,14 @@ void expression_debug_print(struct expression expression) {
 	}
 }
 
-double expression_evaluate(
-	struct expression expression,
-	struct expression_environment *environment
-) {
+double expression_evaluate(struct expression expression, const struct environment *environment) {
 	switch (expression.type) {
 		case expression_type_constant: return expression.constant.value;
 		case expression_type_variable:
-			return environment->variables[(size_t)expression.variable.name - 'a'];
+			if (environment == NULL) {
+				return NAN;
+			}
+			return environment_get_variable(environment, expression.variable.name);
 		case expression_type_operation: {
 			switch (expression.operation.type) {
 				case operation_type_addition:

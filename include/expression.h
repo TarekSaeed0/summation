@@ -3,23 +3,23 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <environment.h>
 #include <stddef.h>
-
-/*
- * expression grammar
- * ------------------------------------------------------------------------------------------------------------
- * atom = (number | identifier "(" expression? ("," expression)* ")" | "(" expression ")")
- * primary = atom ("^" factor)?
- * factor = "-" factor | primary
- * term = (factor (("*" | "/") factor)*)
- * expression = (term (("+" | "-") term)*)
- */
 
 /**
  * @brief a mathematical expression.
  *
  * This data structure represents a mathematical expression that might contain variables.
  * variables are represented with a single alphabet letter.
+ *
+ * Expression grammar
+ * ------------------
+ * * atom = number | identifier, [ "(", [ expression ], { ",", expression }, ")" ] | "(" expression
+ * ")"
+ * * primary = atom, [ "^", factor ]
+ * * factor = "-" factor | primary
+ * * term = factor, { ("*" | "/"), factor }
+ * * expression = term, { ("+" | "-"), term }
  */
 struct expression {
 	enum expression_type {
@@ -58,7 +58,7 @@ struct expression {
  *
  * Returns the number of operands that an operation of type `type` takes.
  *
- * @param type[in] The type of the operation.
+ * @param[in] type The type of the operation.
  * @return The arity of the operation.
  *
  * @memberof operation_type
@@ -72,7 +72,7 @@ static inline size_t operation_type_arity(enum operation_type type) {
  *
  * Returns the priority of an operation of type `type`.
  *
- * @param type[in] The type of the operation.
+ * @param[in] type The type of the operation.
  * @return The precedence of the operation.
  *
  * @memberof operation_type
@@ -98,7 +98,7 @@ static inline size_t operation_type_precedence(enum operation_type type) {
  *
  * Returns a new expression of type constant with the given value.
  *
- * @param value[in] The constant's value.
+ * @param[in] value The constant's value.
  * @return The newly created expression.
  *
  * @memberof expression
@@ -115,7 +115,7 @@ static inline struct expression expression_constant(double value) {
  *
  * Returns a new expression of type variable with the given name.
  *
- * @param name[in] The variable's name, must be an alphabet letter.
+ * @param[in] name The variable's name, must be an alphabet letter.
  * @return The newly created expression.
  *
  * @memberof expression
@@ -135,7 +135,7 @@ static inline struct expression expression_variable(char name) {
  * Returns a new expression of type operation with the given type and operands.
  * The number of operands must match the arity of the operation.
  *
- * @param type[in] The operation's type.
+ * @param[in] type The operation's type.
  * @return The newly created expression.
  *
  * @memberof expression
@@ -147,7 +147,7 @@ struct expression expression_operation(enum operation_type type, ...);
  *
  * Returns a deep copy of `expression`
  *
- * @param expression[in] The expression to be cloned
+ * @param[in] expression The expression to be cloned
  * @return The newly created clone.
  *
  * @memberof expression
@@ -170,7 +170,7 @@ void expression_drop(struct expression expression);
  *
  * Parses the given string into an expression.
  *
- * @param string The string to be parsed.
+ * @param[in] string The string to be parsed.
  * @return The newly created expression.
  *
  * @memberof expression
@@ -183,7 +183,7 @@ struct expression expression_from_string(const char *string);
  * Creates a human-readable string representation of the given expression.
  * The returned string must be freed with `free()`
  *
- * @param expression The expression to be converted.
+ * @param[in] expression The expression to be converted.
  * @return The newly created string.
  *
  * @memberof expression
@@ -195,35 +195,23 @@ char *expression_to_string(struct expression expression);
  *
  * Prints the expression in a format that is suitable for debugging.
  *
- * @param expression The expression to be printed.
+ * @param[in] expression The expression to be printed.
  *
  * @memberof expression
  */
 void expression_debug_print(struct expression expression);
 
 /**
- * @brief an evaluation environment.
- *
- * This data structure represents the environment in which an expression is evaluated.
- */
-struct expression_environment {
-	double variables['z' - 'a' + 1];
-};
-
-/**
  * @brief Evaluates an expression
  *
  * Returns the result of evaluating the given expression in the given environment
  *
- * @param expression The expression to be evaluated.
- * @param environment The environment the expression is evaluated in.
+ * @param[in] expression The expression to be evaluated.
+ * @param[in] environment The environment the expression is evaluated in.
  * @return the result of the expression
  *
  * @memberof expression
  */
-double expression_evaluate(
-	struct expression expression,
-	struct expression_environment *environment
-);
+double expression_evaluate(struct expression expression, const struct environment *environment);
 
 #endif

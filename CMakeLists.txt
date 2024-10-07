@@ -8,7 +8,9 @@ project(
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(summation src/expression.c src/main.c)
+add_executable(
+	summation src/environment.c src/expression.c src/summation.c src/main.c
+)
 target_include_directories(summation PRIVATE include)
 target_link_libraries(summation PRIVATE m)
 target_compile_options(

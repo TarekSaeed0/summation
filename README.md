@@ -27,6 +27,6 @@ summation LOWER_BOUND UPPER_BOUND SUMMAND
 ```sh
 > summation 1 5 "1 + sin(i^2)"
 5.07653
-> summation 0 10 "1 / 2 ^ (x + 1)"
+> summation 0 10 "1 / 2 ^ (i + 1)"
 5.5
 ```

@@ -8,6 +8,7 @@ on:
       - '**.h'
       - '**.c'
       - 'doc/**'
+      - 'README.md'
 
 jobs:
   build:

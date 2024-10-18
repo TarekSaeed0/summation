@@ -140,6 +140,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acf2d860197c1a25aa83ad03188a4e297" id="r_acf2d860197c1a25aa83ad03188a4e297"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexpression.html#acf2d860197c1a25aa83ad03188a4e297">expression_drop</a> (struct <a class="el" href="structexpression.html">expression</a> *<a class="el" href="structexpression.html">expression</a>)</td></tr>
 <tr class="memdesc:acf2d860197c1a25aa83ad03188a4e297"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drops an expression.  <br /></td></tr>
 <tr class="separator:acf2d860197c1a25aa83ad03188a4e297"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2702ace7deda53014065fc2e26fcc2a8" id="r_a2702ace7deda53014065fc2e26fcc2a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexpression.html#a2702ace7deda53014065fc2e26fcc2a8">expression_equals</a> (const struct <a class="el" href="structexpression.html">expression</a> *expression_1, const struct <a class="el" href="structexpression.html">expression</a> *expression_2)</td></tr>
+<tr class="memdesc:a2702ace7deda53014065fc2e26fcc2a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether two expressions are equal.  <br /></td></tr>
+<tr class="separator:a2702ace7deda53014065fc2e26fcc2a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab991dedd2668e095ec8bbe4674388b6a" id="r_ab991dedd2668e095ec8bbe4674388b6a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structexpression.html">expression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexpression.html#ab991dedd2668e095ec8bbe4674388b6a">expression_from_string</a> (const char *string)</td></tr>
 <tr class="memdesc:ab991dedd2668e095ec8bbe4674388b6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an expression from a string.  <br /></td></tr>
 <tr class="separator:ab991dedd2668e095ec8bbe4674388b6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,6 +152,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1dab682ceb5dda3d21762246a9c1e93e" id="r_a1dab682ceb5dda3d21762246a9c1e93e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexpression.html#a1dab682ceb5dda3d21762246a9c1e93e">expression_simplify</a> (struct <a class="el" href="structexpression.html">expression</a> *<a class="el" href="structexpression.html">expression</a>, const struct <a class="el" href="structenvironment.html">environment</a> *<a class="el" href="structenvironment.html">environment</a>)</td></tr>
 <tr class="memdesc:a1dab682ceb5dda3d21762246a9c1e93e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simplifies an expression.  <br /></td></tr>
 <tr class="separator:a1dab682ceb5dda3d21762246a9c1e93e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f8cd2c11f1f07e166341937f66382c8" id="r_a1f8cd2c11f1f07e166341937f66382c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexpression.html#a1f8cd2c11f1f07e166341937f66382c8">expression_print</a> (const struct <a class="el" href="structexpression.html">expression</a> *<a class="el" href="structexpression.html">expression</a>)</td></tr>
+<tr class="memdesc:a1f8cd2c11f1f07e166341937f66382c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints an expression.  <br /></td></tr>
+<tr class="separator:a1f8cd2c11f1f07e166341937f66382c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59565965bf6b55da56fa8fc803c96876" id="r_a59565965bf6b55da56fa8fc803c96876"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexpression.html#a59565965bf6b55da56fa8fc803c96876">expression_debug_print</a> (const struct <a class="el" href="structexpression.html">expression</a> *<a class="el" href="structexpression.html">expression</a>)</td></tr>
 <tr class="memdesc:a59565965bf6b55da56fa8fc803c96876"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints an expression in debug format.  <br /></td></tr>
 <tr class="separator:a59565965bf6b55da56fa8fc803c96876"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -357,6 +363,44 @@ Expression grammar</h2>
 
 </div>
 </div>
+<a id="a2702ace7deda53014065fc2e26fcc2a8" name="a2702ace7deda53014065fc2e26fcc2a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2702ace7deda53014065fc2e26fcc2a8">&#9670;&#160;</a></span>expression_equals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool expression_equals </td>
+          <td>(</td>
+          <td class="paramtype">const struct <a class="el" href="structexpression.html">expression</a> *&#160;</td>
+          <td class="paramname"><em>expression_1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const struct <a class="el" href="structexpression.html">expression</a> *&#160;</td>
+          <td class="paramname"><em>expression_2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks whether two expressions are equal. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expression_1</td><td>The first expression </td></tr>
+    <tr><td class="paramname">expression_2</td><td>The second expression </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the expressions are equal, <code>false</code> otherwise </dd></dl>
+
+</div>
+</div>
 <a id="a7611eb5ed3f6cbf3e69fbc3ede65073d" name="a7611eb5ed3f6cbf3e69fbc3ede65073d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7611eb5ed3f6cbf3e69fbc3ede65073d">&#9670;&#160;</a></span>expression_evaluate()</h2>
 
@@ -459,6 +503,33 @@ Expression grammar</h2>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The newly created expression. </dd></dl>
+
+</div>
+</div>
+<a id="a1f8cd2c11f1f07e166341937f66382c8" name="a1f8cd2c11f1f07e166341937f66382c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f8cd2c11f1f07e166341937f66382c8">&#9670;&#160;</a></span>expression_print()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void expression_print </td>
+          <td>(</td>
+          <td class="paramtype">const struct <a class="el" href="structexpression.html">expression</a> *&#160;</td>
+          <td class="paramname"><em>expression</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Prints an expression. </p>
+<p>Prints the expression in a human-readable format.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">expression</td><td>The expression to be printed. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

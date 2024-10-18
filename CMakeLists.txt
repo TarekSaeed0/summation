@@ -31,4 +31,16 @@ target_compile_options(
 			-Wcast-qual
 			-Wconversion
 			-Wunreachable-code
+			-fsanitize=address
 )
+target_link_options(summation PRIVATE -fsanitize=address)
+
+if(UNIT_TESTING)
+	list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmocka)
+
+	find_package(cmocka REQUIRED)
+
+	include(AddCMockaTest)
+
+	add_subdirectory(test)
+endif(UNIT_TESTING)

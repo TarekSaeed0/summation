@@ -1,6 +1,7 @@
 #include <expression.h>
 
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -63,7 +64,60 @@ void expression_drop(struct expression *expression) {
 	}
 }
 
+static bool double_equals(double value_1, double value_2, double epsilon) {
+	double difference = fabs(value_1 - value_2);
+	difference = (difference >= 0.0F) ? difference : -difference;
+	if (difference <= epsilon) {
+		return true;
+	}
+
+	double relative_difference = fmax(fabs(value_1), fabs(value_2)) * DBL_EPSILON;
+	return difference <= relative_difference;
+}
+
+#define EXPRESSION_EPSILON (0.000000001)
+
+bool expression_equals(
+	const struct expression *expression_1,
+	const struct expression *expression_2
+) {
+	assert(expression_1 != NULL && expression_2 != NULL);
+
+	if (expression_1->type != expression_2->type) {
+		return false;
+	}
+
+	switch (expression_1->type) {
+		case expression_type_constant:
+			return double_equals(
+				expression_1->constant.value,
+				expression_2->constant.value,
+				EXPRESSION_EPSILON
+			);
+		case expression_type_variable:
+			return expression_1->variable.name == expression_2->variable.name;
+		case expression_type_operation: {
+			if (expression_1->operation.type != expression_2->operation.type) {
+				return false;
+			}
+
+			size_t arity = operation_type_arity(expression_1->operation.type);
+			for (size_t i = 0; i < arity; i++) {
+				if (!expression_equals(
+						&expression_1->operation.operands[i],
+						&expression_2->operation.operands[i]
+					)) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+	}
+}
+
 static struct expression expression_from_string_expression(const char **string);
+// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 static struct expression expression_from_string_atom(const char **string) {
 	assert(string != NULL && *string != NULL);
 
@@ -444,7 +498,19 @@ void expression_simplify(struct expression *expression, const struct environment
 	}
 }
 
+void expression_print(const struct expression *expression) {
+	assert(expression != 0);
+
+	char *string = expression_to_string(expression);
+
+	printf("%s", string);
+
+	free(string);
+}
+
 void expression_debug_print(const struct expression *expression) {
+	assert(expression != 0);
+
 	switch (expression->type) {
 		case expression_type_constant: printf("constant(%lg)", expression->constant.value); break;
 		case expression_type_variable: printf("variable(%c)", expression->variable.name); break;

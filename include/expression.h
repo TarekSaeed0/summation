@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <environment.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 /**
@@ -172,6 +173,20 @@ struct expression expression_clone(const struct expression *expression);
 void expression_drop(struct expression *expression);
 
 /**
+ * @brief Checks whether two expressions are equal
+ *
+ * @param expression_1 The first expression
+ * @param expression_2 The second expression
+ * @return `true` if the expressions are equal, `false` otherwise
+ *
+ * @memberof expression
+ */
+bool expression_equals(
+	const struct expression *expression_1,
+	const struct expression *expression_2
+);
+
+/**
  * @brief Creates an expression from a string.
  *
  * Parses the given string into an expression.
@@ -208,6 +223,17 @@ char *expression_to_string(const struct expression *expression);
  * @memberof expression
  */
 void expression_simplify(struct expression *expression, const struct environment *environment);
+
+/**
+ * @brief Prints an expression.
+ *
+ * Prints the expression in a human-readable format.
+ *
+ * @param[in] expression The expression to be printed.
+ *
+ * @memberof expression
+ */
+void expression_print(const struct expression *expression);
 
 /**
  * @brief Prints an expression in debug format.

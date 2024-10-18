@@ -1,7 +1,7 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-#define VARIABLES_COUNT ('z' - 'a' + 1)
+#define VARIABLES_COUNT (('z' - 'a' + 1) + ('Z' - 'A' + 1))
 
 /**
  * @brief an evaluation environment.

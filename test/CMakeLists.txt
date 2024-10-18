@@ -10,11 +10,13 @@ foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
 		${_CMOCKA_TEST}.c
 		COMPILE_OPTIONS
 		${DEFAULT_C_COMPILE_FLAGS}
+		-fsanitize=address
 		LINK_LIBRARIES
 		cmocka::cmocka
 		m
 		LINK_OPTIONS
 		${DEFAULT_LINK_FLAGS}
+		-fsanitize=address
 	)
 	target_include_directories(
 		${_CMOCKA_TEST} PRIVATE ../include ${cmocka_BINARY_DIR}

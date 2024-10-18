@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -7,19 +8,19 @@
 #define DEFAULT_BASE 10
 
 /**
- * @brief Converts a string to a size_t
+ * @brief Converts a string to a long int
  *
- * Parses the string `string` into a size_t and stores it into `result`.
+ * Parses the string `string` into a long int and stores it into `result`.
  *
  * @param[in] string The string to be parsed
- * @param[out] result Pointer to the size_t to store the result
+ * @param[out] result Pointer to the long int to store the result
  * @return EXIT_SUCCESS on success, and EXIT_FAILURE on error
  */
-static inline int strtozu(const char *string, size_t *result) {
+static inline int string_to_long(const char *string, long *result) {
 	assert(string != NULL && result != NULL);
 
 	char *end = NULL;
-	uintmax_t value = strtoumax(string, &end, DEFAULT_BASE);
+	long value = strtol(string, &end, DEFAULT_BASE);
 	if (end == string) {
 		(void)fprintf(stderr, "Error: Failed to parse a number from \"%s\"\n", string);
 		return EXIT_FAILURE;
@@ -33,7 +34,7 @@ static inline int strtozu(const char *string, size_t *result) {
 		return EXIT_FAILURE;
 	}
 
-	if (value > SIZE_MAX) {
+	if (errno == ERANGE) {
 		(void)fprintf(stderr, "Error: Number is out of the representable range \"%s\"\n", string);
 		return EXIT_FAILURE;
 	}
@@ -49,14 +50,14 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	size_t lower_bound = 0;
-	if (strtozu(argv[1], &lower_bound) == EXIT_FAILURE) {
+	long lower_bound = 0;
+	if (string_to_long(argv[1], &lower_bound) == EXIT_FAILURE) {
 		(void)fprintf(stderr, "Error: Invalid lower bound \"%s\"\n", argv[1]);
 		return EXIT_FAILURE;
 	}
 
-	size_t upper_bound = 0;
-	if (strtozu(argv[2], &upper_bound) == EXIT_FAILURE) {
+	long upper_bound = 0;
+	if (string_to_long(argv[2], &upper_bound) == EXIT_FAILURE) {
 		(void)fprintf(stderr, "Error: Invalid upper bound \"%s\"\n", argv[2]);
 		return EXIT_FAILURE;
 	}

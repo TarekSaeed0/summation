@@ -14,6 +14,6 @@
  * @param[in] summand The summand of the summation
  * @return The total of the summation
  */
-double summation(size_t lower_bound, size_t upper_bound, const char *summand);
+double summation(long lower_bound, long upper_bound, const char *summand);
 
 #endif

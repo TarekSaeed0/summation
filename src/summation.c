@@ -1,8 +1,9 @@
 #include <summation.h>
 
 #include <assert.h>
+#include <stdint.h>
 
-double summation(size_t lower_bound, size_t upper_bound, const char *summand) {
+double summation(long lower_bound, long upper_bound, const char *summand) {
 	assert(summand != NULL);
 
 	if (lower_bound > upper_bound) {
@@ -15,7 +16,7 @@ double summation(size_t lower_bound, size_t upper_bound, const char *summand) {
 	expression_simplify(&expression, &environment);
 
 	double sum = 0;
-	for (size_t index = lower_bound; index <= upper_bound; ++index) {
+	for (long index = lower_bound; index <= upper_bound; ++index) {
 		environment_set_variable(&environment, 'i', (double)index);
 
 		sum += expression_evaluate(&expression, &environment);
